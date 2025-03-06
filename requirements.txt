@@ -1,6 +1,6 @@
 # --------- pytorch --------- #
 torch==2.3.0
-torchvision==0.18.0
+torchvision==0.21.0
 lightning
 torchmetrics>=0.11.4
 datasets
