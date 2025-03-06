@@ -1,0 +1,12 @@
+_target_: optimol.data.mol2d_datamodule.Mol2dDataModule
+train_data: /data/screens/p07637/autodock_vs_enamine_unif_150k_sample/huggingface/tr_ds_150k_norm #/home/hashtawy/projects/data_engine/featurize/data/adock/train_100k_hfds
+test_data: /data/screens/p07637/autodock_vs_enamine_unif_150k_sample/huggingface/ts_ds_5k_for_150k_norm #/home/hashtawy/projects/data_engine/featurize/data/adock/test_8k_for_100k_hfds
+batch_size: 128 # Needs to be divisible by the number of devices (e.g., if in a distributed setup)
+train_val_split: [0.9, 0.1]
+num_workers: 16
+keep_in_memory: False
+ligand_field: null # smiles
+ligand_id_field: null # inchi_key would be great 
+tasks:
+equality_only: True
+output_dir: null # this will be used to write the ligprep, docking, and hugging face dataset. if not provided, the hydra output will be

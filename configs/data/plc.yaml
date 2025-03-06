@@ -1,0 +1,49 @@
+_target_: optimol.data.plc_datamodule.PLCDataModule
+train_data: /data/datasets/pdbbind/v2020/hf_datasets/general2020_pK_and_poses #pdbbind_bindingdb_wo_core2016_80_pK general2020_wo_core2016_80_pK_60k_sample #gen_wo_core_ligs_and_ba general2020_wo_core2016_80_pK_60k_sample general2020_wo_core2016_pK_and_poses general2020_wo_core2016_pK_and_poses_5k
+test_data: /data/datasets/pdbbind/v2020/hf_datasets/core2016_pK_and_poses #core_ligs_and_ba core2016_pK_and_poses_5k
+targets_data_dir: /data/datasets/pdbbind/v2020/hf_datasets/targets2
+use_protein_global_features: False
+use_ligand_global_features: False
+residue_features: classic # classic, none, onehot, esm 
+batch_size: 64 # Needs to be divisible by the number of devices (e.g., if in a distributed setup)
+train_val_split: [0.9, 0.1]
+num_workers: 4
+keep_in_memory: True #lyla
+pin_memory: True
+ligand_field: null # for example docked_ligand_path
+complex_id_field: null # "pdb_code"
+target_field: "pdb_code" # "pdb_code" target column/field when csv file/hugging face is provided, respectively. If in csv, it will interpretted as path
+target_id: null # e.g., "10gs" target id when target field & path are not provided during docking. This will be loaded from the targets_data_dir (hugging face)
+target_path: null # target path when target field is not provided during docking
+
+ligand_prep:
+  enabled: False
+  conformer_generators: ["rdkit"] 
+  n_confs: 1
+  crystal_ligand_path: null # to align against if needed
+  overwrite: False
+  ignore_chiralities: False
+  n_stereoisomers: 1
+
+ligand_dock:
+  enabled: False
+  docking_engines: ["qvina"]
+  n_poses: 1
+  crystal_ligand_path: null # to use as reference for docking and calculate RMSD
+  center_x: null
+  center_y: null
+  center_z: null
+  size_x: null
+  size_y: null
+  size_z: null
+  exhaustiveness: 8
+  overwrite: False
+  dock_only: True
+tasks:
+  ba: regression
+  # pose_rmsd: regression
+  native_pose: classification
+equality_only: True
+
+output_dir: null # this will be used to write the ligprep, docking, and hugging face dataset. if not provided, the hydra output will be 
+# top speed 16 it/second -> 399 it/epoch = 24 seconds/epoch

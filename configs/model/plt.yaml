@@ -1,0 +1,59 @@
+_target_: optimol.models.gnn_module.GnnLitModule
+
+optimizer:
+  _target_: torch.optim.Adam
+  _partial_: true
+  lr: 0.0005
+  weight_decay: 0.000001
+
+scheduler:
+  _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+  _partial_: true
+  mode: min
+  factor: 0.1
+  patience: 100000
+
+ensemble_size: 1
+
+net:
+  _target_: optimol.models.components.plt.PLT
+  mol:
+    encoder_layers: 15
+    encoder_embed_dim: 512
+    encoder_ffn_embed_dim: 2048
+    encoder_attention_heads: 64
+    dropout: 0.1
+    emb_dropout: 0.1
+    attention_dropout: 0.1
+    activation_dropout: 0.0
+    pooler_dropout: 0.0
+    max_seq_len: 512
+    activation_fn: gelu
+    pooler_activation_fn: tanh
+    post_ln: false
+    # Losses (set to -1.0 to indicate they are not used)
+    masked_token_loss: -1.0
+    masked_coord_loss: -1.0
+    masked_dist_loss: -1.0
+    x_norm_loss: -1.0
+    delta_pair_repr_norm_loss: -1.0
+  pocket:
+    encoder_layers: 15
+    encoder_embed_dim: 512
+    encoder_ffn_embed_dim: 2048
+    encoder_attention_heads: 64
+    dropout: 0.1
+    emb_dropout: 0.1
+    attention_dropout: 0.1
+    activation_dropout: 0.0
+    pooler_dropout: 0.0
+    max_seq_len: 512
+    activation_fn: gelu
+    pooler_activation_fn: tanh
+    post_ln: false
+    # Losses (set to -1.0 to indicate they are not used)
+    masked_token_loss: -1.0
+    masked_coord_loss: -1.0
+    masked_dist_loss: -1.0
+    x_norm_loss: -1.0
+    delta_pair_repr_norm_loss: -1.0

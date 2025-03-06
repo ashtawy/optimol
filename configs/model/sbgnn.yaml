@@ -1,0 +1,49 @@
+_target_: optimol.models.gnn_module.GnnLitModule
+
+optimizer:
+  _target_: torch.optim.Adam
+  _partial_: true
+  lr: 0.0005
+  weight_decay: 0.000001
+
+scheduler:
+  _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+  _partial_: true
+  mode: min
+  factor: 0.1
+  patience: 100000
+
+ensemble_size: 1
+
+net:
+  _target_: optimol.models.components.gnn.GNN
+  n_global_features: 0 #112 # 112 (ligand), 320 (protein), 0 (no global features), 432 (both)
+  n_atom_types: 17
+  n_atom_embeddings: 11 # (atom types + residue_features. When residue_features in pdbbind.yaml = onehot (37), esm (357 includes onehot + esm), , none (11 = 9 atomtypes + 1 unknown + 1 lig/prot), 
+  n_edge_features: 47
+  gnn_embedding:
+    convolution_type: sageconv
+    atom_embedding_sizes: [256, 256] # atom convolution sizes
+    activation: relu
+    batch_norm: true
+    dropout: 0.4
+    atom_update_aggregation: add
+    readout_pooling: [add]
+    readout_mlp_layer_sizes: []
+    skip_connections: true
+  global_embedding:
+    hidden_layer_sizes: []
+    n_output_features: 256
+    activation: relu
+    apply_output_activation: true
+    batch_norm: true
+    dropout: 0.4
+  output_net_configs:
+    hidden_layer_sizes: [256, 128]
+    activation: relu 
+    apply_output_activation: false
+    batch_norm: true
+    dropout: 0.0
+
+# compile model for faster training with pytorch 2.0
+compile: false

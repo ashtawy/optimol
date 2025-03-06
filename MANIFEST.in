@@ -1,0 +1,3 @@
+include configs/*.yaml
+include .project-root
+recursive-include configs *

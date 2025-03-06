@@ -1,0 +1,49 @@
+_target_: optimol.models.gnn_module.GnnLitModule
+
+optimizer:
+  _target_: torch.optim.Adam
+  _partial_: true
+  lr: 0.0005
+  weight_decay: 0.00001
+
+scheduler:
+  _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+  _partial_: true
+  mode: min
+  factor: 0.1
+  patience: 100000
+
+ensemble_size: 5
+
+net:
+  _target_: optimol.models.components.gnn.GNN
+  n_global_features: 0 #112
+  n_atom_types: 17
+  n_atom_embeddings: 36
+  n_edge_features: 14
+  gnn_embedding:
+    convolution_type: sageconv
+    atom_embedding_sizes: [256, 512, 512] # atom convolution sizes
+    activation: relu
+    batch_norm: true
+    dropout: 0.3
+    atom_update_aggregation: add
+    readout_pooling: [add]
+    readout_mlp_layer_sizes: []
+    skip_connections: true
+  global_embedding:
+    hidden_layer_sizes: []
+    n_output_features: 256
+    activation: relu
+    apply_output_activation: true
+    batch_norm: true
+    dropout: 0.4
+  output_net_configs:
+    hidden_layer_sizes: [256, 128]
+    activation: relu 
+    apply_output_activation: false
+    batch_norm: true
+    dropout: 0.0
+
+# compile model for faster training with pytorch 2.0
+compile: false

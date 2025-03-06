@@ -1,0 +1,18 @@
+# @package _global_
+
+defaults:
+  - _self_
+  - data: mol2d # mnist # choose datamodule with `test_dataloader()` for evaluation
+  - model: lbgnn #mnist
+  - logger: null
+  - trainer: default
+  - paths: default
+  - extras: default
+  - hydra: default
+
+task_name: "eval"
+
+tags: ["dev"]
+
+# passing checkpoint path is necessary for evaluation
+ckpt_path: /home/hashtawy/projects/light_hydra/logs/train/runs/2024-07-16_22-41-51 #null

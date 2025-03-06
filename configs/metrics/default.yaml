@@ -1,0 +1,2 @@
+- _target_: src.utils.metrics.MSE
+- _target_: src.utils.metrics.Spearmanr
