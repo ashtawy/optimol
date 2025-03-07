@@ -30,12 +30,12 @@ pip install git+https://github.com/ashtawy/optimol.git
 ```
 
 ### Usage 
-This is a simple benchmark experiment using experimental microsomal clearance data from the Therapeutics Data Commons (TDC) to quickly test a ligand-based model.
+This is a quick benchmark experiment using experimental microsomal clearance data from the Therapeutics Data Commons (TDC) to quickly test a ligand-based model.
 
 To train and test the model, run:
 
 ```bash
-# assuming you copied the files tdc_microsome_train_val.csv & tdc_microsome_test.csv in this repo to /tmp/tdc_clearance
+# assuming you copied the repo files ./data/tdc_microsome_train_val.csv & ./data/tdc_microsome_test.csv in this repo to /tmp/tdc_clearance
 optimol_train data=mol2d 
             data.train_data=/tmp/tdc_clearance/tdc_microsome_train_val.csv \
             data.test_data=/tmp/tdc_clearance/tdc_microsome_test.csv \
@@ -49,7 +49,7 @@ optimol_train data=mol2d
 To use the model later for scoring, run:
 
 ```bash
-# assuming you copied the file tdc_microsome_test.csv in this repo to /tmp/tdc_clearance
+# assuming you copied the file ./data/tdc_microsome_test.csv in this repo to /tmp/tdc_clearance
 optimol_score --config-path /tmp/tdc_clearance/model_and_evals/.hydra  \
         --config-name config.yaml \
         ckpt_path=/tmp/tdc_clearance/model_and_evals \
