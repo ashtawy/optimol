@@ -9,7 +9,7 @@ This Python package is designed for training, validating, and deploying machine 
 3. They support training as a single model or as an ensemble of models.
 4. Multi-task learning, enabling prediction of multiple tasks concurrently.
 5. It accommodates both target-based and ligand-based prediction tasks.
-6. The loss function supports classification and regression tasks and inequality constraints that are common in drug discovery data (e.g., 5 < pIC50 < 8).
+6. The loss function supports classification and regression tasks.
 
 
 ## Install using conda
