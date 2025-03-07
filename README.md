@@ -36,7 +36,7 @@ To train and test the model, run:
 
 ```bash
 # assuming you copied the repo files ./data/tdc_microsome_train_val.csv & ./data/tdc_microsome_test.csv in this repo to /tmp/tdc_clearance
-optimol_train data=mol2d 
+optimol_train data=mol2d \
             data.train_data=/tmp/tdc_clearance/tdc_microsome_train_val.csv \
             data.test_data=/tmp/tdc_clearance/tdc_microsome_test.csv \
             data.ligand_field=smiles \
