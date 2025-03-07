@@ -17,7 +17,9 @@ class MultiTaskMetrics(nn.Module):
             "spearman": self._compute_regression_metrics,
             "auc": self._compute_auc,
         }
-
+    def reset(self):
+        self.auroc.reset()
+        self.spearman.reset()
     def _compute_auc(self, predictions, targets, weights):
         if self.is_compact_format:
             mask = weights[:, 0] > 0

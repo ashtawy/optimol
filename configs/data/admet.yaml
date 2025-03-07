@@ -1,0 +1,64 @@
+_target_: optimol.data.mol2d_datamodule.Mol2dDataModule
+train_data: /data/datasets/admet/simplus/version_20241016/simplus_30_props_train.csv #/home/hashtawy/projects/data_engine/featurize/data/adock/train_100k_hfds
+test_data: /data/datasets/admet/simplus/version_20241016/simplus_30_props_test.csv #/home/hashtawy/projects/data_engine/featurize/data/adock/test_8k_for_100k_hfds
+batch_size: 128 # Needs to be divisible by the number of devices (e.g., if in a distributed setup)
+train_val_split: [0.95, 0.05]
+num_workers: 16
+keep_in_memory: False
+ligand_field: smiles # smiles
+ligand_id_field: name # inchi_key would be great 
+equality_only: True
+output_dir: null # this will be used to write the ligprep, docking, and hugging face dataset. if not provided, the hydra output will be
+tasks:
+    logp: regression
+    logd: regression
+    peff: regression
+    mdck: regression
+    sw: regression
+    logbb: regression
+    hum_fup: regression
+    rat_fup: regression
+    mou_fup: regression
+    vd: regression
+    cyp_hlm_clint: regression
+    cyp_rlm_clint: regression
+    cyp_mlm_clint: regression
+    herg_pic50: regression
+
+transforms:
+    logp:
+        - std: {mean: 3.362, std: 1.435}
+    logd:
+        - std: {mean: 2.772, std: 1.607}
+    peff:
+        - std: {mean: 2.416, std: 1.889}
+    mdck:
+        - log: null
+        - std: {mean: 2.331, std: 0.622}
+    sw:
+        - log: null
+        - std: {mean: -1.463, std: 1.077}
+    logbb:
+        - std: {mean: -0.421, std: 0.604}
+    cyp_hlm_clint:
+        - log: null
+        - std: {mean: 1.892, std: 0.642}
+    cyp_rlm_clint:
+        - log: null
+        - std: {mean: 2.117, std: 0.602}
+    cyp_mlm_clint:
+        - log: null
+        - std: {mean: 1.992, std: 0.551}
+    hum_fup:
+        - minmax: {min: 0, max: 100}
+    rat_fup:
+        - minmax: {min: 0, max: 100}
+    mou_fup:
+        - minmax: {min: 0, max: 100}
+    vd:
+        - log: null
+        - std: {mean: 0.17, std: 0.373}
+    herg_pic50:
+        - std: {mean: 5.096, std: 0.409}
+
+      

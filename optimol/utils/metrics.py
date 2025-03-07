@@ -105,7 +105,7 @@ def calculate_enrichment(y, yhat, top_p=0.1):
     ef = (ns / Ns) / (n / N)
     return ef
 
-def calculate_pairwise_success_rate(ground_truth, predictions, max_n=10000):
+def calculate_pairwise_success_rate(ground_truth, predictions, max_n=5000):
     if len(ground_truth) != len(predictions):
         raise ValueError("The length of predictions must match the number of rows in the ground truth matrix.")
 

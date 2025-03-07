@@ -1,6 +1,6 @@
 _target_: optimol.data.plc_datamodule.PLCDataModule
-train_data: /data/datasets/pdbbind/v2020/hf_datasets/general2020_pK_and_poses #pdbbind_bindingdb_wo_core2016_80_pK general2020_wo_core2016_80_pK_60k_sample #gen_wo_core_ligs_and_ba general2020_wo_core2016_80_pK_60k_sample general2020_wo_core2016_pK_and_poses general2020_wo_core2016_pK_and_poses_5k
-test_data: /data/datasets/pdbbind/v2020/hf_datasets/core2016_pK_and_poses #core_ligs_and_ba core2016_pK_and_poses_5k
+train_data: /data/datasets/pdbbind/v2020/hf_datasets/general2020_pK #_and_poses #pdbbind_bindingdb_wo_core2016_80_pK general2020_wo_core2016_80_pK_60k_sample #gen_wo_core_ligs_and_ba general2020_wo_core2016_80_pK_60k_sample general2020_wo_core2016_pK_and_poses general2020_wo_core2016_pK_and_poses_5k
+test_data: /data/datasets/pdbbind/v2020/hf_datasets/core2016_pK #_and_poses #core_ligs_and_ba core2016_pK_and_poses_5k
 targets_data_dir: /data/datasets/pdbbind/v2020/hf_datasets/targets2
 use_protein_global_features: False
 use_ligand_global_features: False
@@ -42,8 +42,10 @@ ligand_dock:
 tasks:
   ba: regression
   # pose_rmsd: regression
-  native_pose: classification
+  # native_pose: classification
 equality_only: True
 
 output_dir: null # this will be used to write the ligprep, docking, and hugging face dataset. if not provided, the hydra output will be 
 # top speed 16 it/second -> 399 it/epoch = 24 seconds/epoch
+
+transforms: null

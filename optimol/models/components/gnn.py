@@ -2,16 +2,17 @@ import logging
 
 import torch
 import torch.nn as nn
+from torch.nn import BatchNorm1d
+from torch_geometric.nn import global_add_pool, global_max_pool, global_mean_pool
+from torch_geometric.nn.norm import LayerNorm
+
 from optimol.models.components.conv_layers import (
     MLP,
-    ESAGEConv,
     GaussianSmearing,
     RadiusInteractionGraph,
+    SAGEConv,
     get_activation_module,
 )
-from torch.nn import BatchNorm1d
-from torch_geometric.nn.norm import LayerNorm
-from torch_geometric.nn import global_add_pool, global_max_pool, global_mean_pool
 
 
 class ConvLayers(nn.Module):
@@ -44,7 +45,7 @@ class ConvLayers(nn.Module):
         # self.atom_encoder = nn.Embedding(n_atom_types, n_atom_embeddings)
         for layer_out_dim in atom_embedding_sizes:
             self.layers.append(
-                ESAGEConv(
+                SAGEConv(
                     in_channels=layer_in_dim,
                     out_channels=layer_out_dim,
                     edge_dim=n_edge_features,
@@ -106,7 +107,6 @@ class ConvLayers(nn.Module):
             x_in = x
             x = conv_layer(x, edge_index, edge_attr)
             x = self.activation(x)
-
             if self.skip_connections and x_in.shape[-1] == x.shape[-1]:
                 x = x_in + x
             if self.batch_norm:

@@ -18,7 +18,7 @@ This Python package is designed for training, validating, and deploying machine 
 ```bash
 git clone git@github.com:ashtawy/optimol.git
 cd optimol
-conda env create -f environment.yml -n optimol
+conda env create -f environment.yaml -n optimol
 conda activate optimol
 export PYTHONNOUSERSITE=1
 pip install --no-deps -e .
@@ -115,6 +115,13 @@ python train.py trainer.max_epochs=20 model.optimizer.lr=1e-4
 
 ```bash
 python train.py +model.new_param="owo"
+```
+
+> **Note**: You can also do this 
+
+```bash
+# Override many configs with CLI by removing an entire section and replacing it with a new one
+python train.py --config-path /home/hashtawy/configs --config-name train.yaml data=mol2d data.train_data=/data/experiments/exp1/train_mols.csv data.test_data=/data/experiments/exp1/test_mols.csv data.tasks=null data.tasks='{is_active:classification}' data.ligand_field=smiles data.ligand_id_field=name hydra.run.dir=/data/experiments/exp1/output_dir model=lbgnn model.ensemble_size=1 trainer.max_epochs=10
 ```
 
 </details>

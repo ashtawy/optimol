@@ -65,4 +65,4 @@ dependencies:
       - openmm
       - pdbfixer
       - mols2grid
-      - git+https://github.com/ashtawy/data_engine.git # make public
+      - git+https://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@github.com/ashtawy/data_engine.git # make public

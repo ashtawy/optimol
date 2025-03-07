@@ -3,7 +3,7 @@ from importlib.util import find_spec
 from typing import Any, Callable, Dict, Optional, Tuple
 import torch
 from omegaconf import DictConfig
-
+import numpy as np
 from optimol.utils import pylogger, rich_utils
 
 log = pylogger.RankedLogger(__name__, rank_zero_only=True)
@@ -147,3 +147,34 @@ def collate(batches):
     labels = None if labels[0] is None else torch.cat(labels)
     weights = None if weights[0] is None else torch.cat(weights)
     return meta_data, torch.cat(preds), labels, weights
+
+
+def apply_inverse_transforms(y, transforms):
+    for t in transforms[::-1]:
+        transform_type, params = next(iter(t.items()))
+        if transform_type == "log":
+            y = np.power(10, y)
+        elif transform_type == "std":
+            y = (y * params["std"]) + params["mean"]
+        elif transform_type == "minmax":
+            min_val = params["min"]
+            max_val = params["max"]
+            y = y * (max_val - min_val) + min_val
+    return y
+
+def inverse_transform(df, tasks, transforms):
+    for t, (task_name, task_mode) in enumerate(tasks.items()):
+        task_transforms = transforms.get(task_name)
+        if task_transforms is not None:
+            t_clms = [f"{task_name}_predicted",
+                          f"{task_name}_observed",
+                          f"{task_name}_observed__eq",
+                          f"{task_name}_observed__gt",
+                          f"{task_name}_observed__lt"]
+            for t_clm in t_clms:
+                if t_clm in df.columns:
+                    non_missing = ~df[t_clm].isna()
+                    if sum(non_missing) > 0:
+                        df.loc[non_missing, t_clm] = apply_inverse_transforms(df.loc[non_missing, t_clm].values,
+                                                                                task_transforms)
+    return df

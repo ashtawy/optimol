@@ -1,17 +1,16 @@
-import os
-import pandas as pd
-import logging
-import numpy as np
-import multiprocessing as mp
-import time
-from datasets import Dataset, load_from_disk
 import json
+import logging
+import multiprocessing as mp
+import os
+import time
 
+import numpy as np
+import pandas as pd
 from data_engine.common.utils import load_molecule, setup_logging
-from data_engine.dock.molecule_preparer import MoleculePreparer
 from data_engine.dock.docker import Docker
+from data_engine.dock.molecule_preparer import MoleculePreparer
 from data_engine.featurize.create_datasets import process_target_light
-
+from datasets import Dataset, load_from_disk
 from sklearn.preprocessing import OneHotEncoder
 
 # TODO: Move most of the functions in this file to the data_engine package
@@ -479,6 +478,7 @@ def generate_target_ds(df):
     for _, row in df.iterrows():
         target_path = row["_target_path_to_featurize_"]
         ligand_path = row["_ligand_path_to_featurize_"]
+        # ligand_path = row["crystal_ligand"]
         prt_atom_emb, prt_atom_pos, prt_glob_embds = process_target_light(
             target_path, ligand_path
         )
@@ -495,12 +495,14 @@ def generate_target_ds(df):
             raise ValueError(f"Error processing target {target_path}, {ligand_path}")
 
 
-def featurize_targets(df, output_hfds_directory=None, p2i_json_path=None):
+def featurize_targets(
+    df, output_hfds_directory=None, p2i_json_path=None, target_field="crystal_ligand"
+):
     target_ds = Dataset.from_generator(generate_target_ds, gen_kwargs={"df": df})
     if output_hfds_directory is not None:
         os.makedirs(output_hfds_directory, exist_ok=True)
         target_ds.save_to_disk(output_hfds_directory, max_shard_size="10MB")
-    protein_to_index = {r["pose_path"]: i for i, r in enumerate(target_ds)}
+    protein_to_index = {r[target_field]: i for i, r in enumerate(target_ds)}
     if p2i_json_path is not None:
         with open(p2i_json_path, "w") as json_file:
             json.dump(protein_to_index, json_file)
@@ -678,6 +680,6 @@ def dock_and_featurize(
 
         dataframe["_reference_ligand_path_"] = dataframe[ref_ligand_field]
         targets_hfds, protein_to_index = featurize_targets(
-            dataframe, targets_hfds_path, p2i_path
+            dataframe, targets_hfds_path, p2i_path, target_field
         )
     return ligands_hfds, targets_hfds, protein_to_index

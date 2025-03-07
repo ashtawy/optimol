@@ -13,6 +13,7 @@ import warnings
 from scipy.stats import pearsonr, spearmanr
 import torch.nn.functional as F
 from optimol.utils.metrics import generate_perf_report
+from optimol.utils.utils import inverse_transform
 warnings.filterwarnings(
     "ignore", category=UserWarning, message="TypedStorage is deprecated"
 )
@@ -138,6 +139,8 @@ def evaluate(cfg: DictConfig) -> Tuple[Dict[str, Any], Dict[str, Any]]:
                 "The number of observed columns does not match the number of tasks"
             )
         df = pd.concat([df, tdf], axis=1)
+    if cfg.data.get("transforms"):
+        df = inverse_transform(df, cfg.data.tasks, cfg.data.transforms)
     df = pd.concat([df, pd.DataFrame(meta_data)], axis=1)
     df.to_csv(os.path.join(tr_default_root_dir, "scores.csv.gz"), index=False)
     metric_dict = {}

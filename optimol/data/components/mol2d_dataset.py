@@ -1,7 +1,7 @@
 import numpy as np
 from torch_geometric.data import Data as PygData, Dataset as PygDataset
 import torch
-from optimol.data.components.utils import construct_target
+from  optimol.data.components.utils import construct_target
 import os
 import logging
 
@@ -11,11 +11,13 @@ class Mol2dDataset(PygDataset):
         self,
         main_dataset,
         tasks,
+        transforms,
         equality_only=True
     ):
         super().__init__()
         self.tasks = tasks
         self.equality_only = equality_only
+        self.transforms = transforms
         self.hfds = main_dataset
 
     def len(self):
@@ -36,7 +38,7 @@ class Mol2dDataset(PygDataset):
             edge_attr=torch.from_numpy(edge_features.astype(np.float32)),
             global_features=torch.from_numpy(global_features),
         )
-        graph.y, graph.w = construct_target(row, self.tasks, self.equality_only)
+        graph.y, graph.w = construct_target(row, self.tasks, self.equality_only, self.transforms)
 
         exclude_fields = [
             "atom_embeddings",
