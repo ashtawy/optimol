@@ -24,6 +24,7 @@ class Mol2dDataModule(LightningDataModule):
         ligand_field: str = None,
         ligand_id_field: str = None,
         tasks: Dict[str, str] = None,
+        transforms: Dict[str, Dict[str, Any]] = None,
         equality_only: bool = True,
         output_dir: str = None,
     ) -> None:
@@ -117,12 +118,14 @@ class Mol2dDataModule(LightningDataModule):
                 self.data_val = Mol2dDataset(
                     main_dataset=val_ds,
                     tasks=self.hparams.tasks,
+                    transforms=self.hparams.transforms,
                     equality_only=self.hparams.equality_only,
                 )
 
             self.data_train = Mol2dDataset(
                 main_dataset=train_ds,
                 tasks=self.hparams.tasks,
+                transforms=self.hparams.transforms,
                 equality_only=self.hparams.equality_only,
             )
 
@@ -138,6 +141,7 @@ class Mol2dDataModule(LightningDataModule):
             self.data_test = Mol2dDataset(
                 main_dataset=ts_ds,
                 tasks=self.hparams.tasks,
+                transforms=self.hparams.transforms,
                 equality_only=self.hparams.equality_only,
             )
         elif self.hparams.test_data is None:
@@ -153,6 +157,8 @@ class Mol2dDataModule(LightningDataModule):
         )
 
     def val_dataloader(self):
+        if self.data_val is None:
+            return None
         return PygDataLoader(
             self.data_val,
             batch_size=self.batch_size_per_device,

@@ -24,7 +24,7 @@ net:
     atom_embedding_sizes: [64, 64] # atom convolution sizes
     activation: relu
     batch_norm: true
-    dropout: 0.6
+    dropout: 0.4
     atom_update_aggregation: add
     readout_pooling: [add]
     readout_mlp_layer_sizes: []
@@ -35,13 +35,13 @@ net:
     activation: relu
     apply_output_activation: true
     batch_norm: true
-    dropout: 0.6
+    dropout: 0.4
   output_net_configs:
     hidden_layer_sizes: [64]
     activation: relu 
     apply_output_activation: false
     batch_norm: true
-    dropout: 0.6
+    dropout: 0.4
 
 # compile model for faster training with pytorch 2.0
 compile: false

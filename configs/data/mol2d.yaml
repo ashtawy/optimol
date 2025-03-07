@@ -1,7 +1,7 @@
 _target_: optimol.data.mol2d_datamodule.Mol2dDataModule
 train_data: /data/screens/p07637/autodock_vs_enamine_unif_150k_sample/huggingface/tr_ds_150k_norm #/home/hashtawy/projects/data_engine/featurize/data/adock/train_100k_hfds
 test_data: /data/screens/p07637/autodock_vs_enamine_unif_150k_sample/huggingface/ts_ds_5k_for_150k_norm #/home/hashtawy/projects/data_engine/featurize/data/adock/test_8k_for_100k_hfds
-batch_size: 128 # Needs to be divisible by the number of devices (e.g., if in a distributed setup)
+batch_size: 64 # Needs to be divisible by the number of devices (e.g., if in a distributed setup)
 train_val_split: [0.8, 0.2]
 num_workers: 16
 keep_in_memory: False

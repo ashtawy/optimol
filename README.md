@@ -30,15 +30,40 @@ pip install git+https://github.com/ashtawy/optimol.git
 ```
 
 ### Usage 
+This is a simple benchmark experiment using experimental microsomal clearance data from the Therapeutics Data Commons (TDC) to quickly test a ligand-based model.
 
-The main commands available are. See below for details on how to configure the run using yaml files and CLI args.
+To train and test the model, run:
 
 ```bash
-$ optimol_train
-#or
-$ optimol_score
+# assuming you copied the files tdc_microsome_train_val.csv & tdc_microsome_test.csv in this repo to /tmp/tdc_clearance
+optimol_train data=mol2d 
+            data.train_data=/tmp/tdc_clearance/tdc_microsome_train_val.csv \
+            data.test_data=/tmp/tdc_clearance/tdc_microsome_test.csv \
+            data.ligand_field=smiles \
+            data.ligand_id_field=name \
+            data.tasks='{Y_log:regression}' \
+            model.ensemble_size=5 \
+            hydra.run.dir=/tmp/tdc_clearance/model_and_evals
 ```
+
+To use the model later for scoring, run:
+
+```bash
+# assuming you copied the file tdc_microsome_test.csv in this repo to /tmp/tdc_clearance
+optimol_score --config-path /tmp/tdc_clearance/model_and_evals/.hydra  \
+        --config-name config.yaml \
+        ckpt_path=/tmp/tdc_clearance/model_and_evals \
+        task_name=eval \
+        data.test_data=/tmp/tdc_clearance/tdc_microsome_test.csv \
+        logger=null \
+        data.ligand_field=smiles \
+        data.ligand_id_field=name \
+        hydra.run.dir=/tmp/tdc_clearance/predictions
+```
+
 <br>
+
+### Train a Ligand-Based GNN model on Experimental Microsomal Clearance Data
 
 
 ## Project Structure

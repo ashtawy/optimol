@@ -1,7 +1,7 @@
 _target_: optimol.data.mol2d_datamodule.Mol2dDataModule
-train_data: /data/datasets/admet/simplus/version_20241016/simplus_30_props_train.csv #/home/hashtawy/projects/data_engine/featurize/data/adock/train_100k_hfds
+train_data: /data/datasets/admet/simplus/version_20241016/simplus_30_props_test.csv #/home/hashtawy/projects/data_engine/featurize/data/adock/train_100k_hfds
 test_data: /data/datasets/admet/simplus/version_20241016/simplus_30_props_test.csv #/home/hashtawy/projects/data_engine/featurize/data/adock/test_8k_for_100k_hfds
-batch_size: 128 # Needs to be divisible by the number of devices (e.g., if in a distributed setup)
+batch_size: 64 # Needs to be divisible by the number of devices (e.g., if in a distributed setup)
 train_val_split: [0.95, 0.05]
 num_workers: 16
 keep_in_memory: False
